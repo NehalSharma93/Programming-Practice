@@ -1,31 +1,47 @@
 class RemoveKDigits {
-    public int singleNonDuplicate(int[] nums) {
-        int N = nums.length;
-        if(N == 1)
-            return nums[0];
+     public String removeKdigits(String num, int k) {
+        Stack<Character> stack = new Stack<Character>();
         
-        int left = 0;
-        int right = N - 1;
-        int mid;
-        
-        while(left < right){
-            mid = left + ((right  - left) >> 1);
-            if(nums[mid] == nums[mid + 1]){
-                // from index mid to (N - 1) - if even then check left interval
-                if(mid%2 == 1)
-                    right = mid - 1;
-                else
-                    left = mid + 1;
-            }else if(nums[mid] == nums[mid - 1]){
-                // from index (mid - 1) to (N - 1) - if even then check left interval
-                if(mid%2 == 0)
-                    right = mid - 2;
-                else
-                    left = mid + 1;
-            }else
-                return nums[mid];
+        stack.push(num.charAt(0));
+        if(k >= num.length())
+            return "0";
+        int i = 1;
+         StringBuffer result = new StringBuffer("");
+        for( i = 1;i<num.length();i++){
+            if(num.charAt(i) >= stack.peek())
+                stack.push(num.charAt(i));
+            else{
+                while(k > 0 && !stack.empty() && num.charAt(i) < stack.peek() ){
+                    stack.pop();
+                    k--;
+                }
+                if(k == 0){
+                    result.append(num.substring(i));
+                    break;
+                }
+                stack.push(num.charAt(i));
+            }
         }
-        
-        return nums[left];
+        if(k == 0){
+            while(!stack.empty()){
+                char c = stack.pop();
+                result.insert(0,c);
+            }
+        }
+        else{
+            while(!stack.empty()){
+                char c = stack.pop();
+                if(k == 0)
+                    result.insert(0,c);
+                else
+                    k--;
+            }
+        }
+        String r = result.toString();
+        for(int j=0;j < r.length();j++){
+            if(r.charAt(j) != '0')
+                return r.substring(j);
+        }
+        return "0";
     }
 }
