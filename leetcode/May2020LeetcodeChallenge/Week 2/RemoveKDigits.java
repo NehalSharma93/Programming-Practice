@@ -1,24 +1,31 @@
-class CheckIfStriaghtLine {
-    public boolean checkStraightLine(int[][] coordinates) {
-        double m;
-        double c = 0;
+class RemoveKDigits {
+    public int singleNonDuplicate(int[] nums) {
+        int N = nums.length;
+        if(N == 1)
+            return nums[0];
         
-        if(coordinates.length == 2)
-            return true;
+        int left = 0;
+        int right = N - 1;
+        int mid;
         
-        double a = coordinates[1][1] - coordinates[0][1];
-        double b = coordinates[1][0] - coordinates[0][0];
-        m =  a / b;
-        c = coordinates[0][1] - m * (double)(coordinates[0][0]);
-        
-        for(int i=2;i<coordinates.length;i++){
-            double y = (double)coordinates[i][1];
-            double x = (double)coordinates[i][0];
-            if(y == (m*x + c))
-                continue;
-            else
-                return false;
+        while(left < right){
+            mid = left + ((right  - left) >> 1);
+            if(nums[mid] == nums[mid + 1]){
+                // from index mid to (N - 1) - if even then check left interval
+                if(mid%2 == 1)
+                    right = mid - 1;
+                else
+                    left = mid + 1;
+            }else if(nums[mid] == nums[mid - 1]){
+                // from index (mid - 1) to (N - 1) - if even then check left interval
+                if(mid%2 == 0)
+                    right = mid - 2;
+                else
+                    left = mid + 1;
+            }else
+                return nums[mid];
         }
-        return true;
+        
+        return nums[left];
     }
 }
